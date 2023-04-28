@@ -1,0 +1,8 @@
+{
+  "goerli": {
+    "StakingRewardsDAI": {
+      "address": "0x2bc0938bE6A6b2FEc18C7783E1FAFaa0B731b6C6",
+      "startBlock": 8885815
+    }
+  }
+}
