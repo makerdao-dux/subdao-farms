@@ -20,6 +20,7 @@ All the information available here: https://thegraph.com/docs/en/deploying/subgr
 ```
 npx graph auth --product hosted-service CODE
 npx graph deploy --product hosted-service [USER]/[GRAPH]
+> npx graph deploy --product hosted-service makerdao-dux/subdao-farms
 ```
 
 ## Deployment urls

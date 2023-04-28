@@ -14,6 +14,7 @@ import {
 } from "../generated/schema"
 
 import { getFarm } from "./getFarm"
+import { getDepositor } from "./getDepositor"
 
 export function handleRewardPaid(event: RewardPaidEvent): void {
   const farm = getFarm(event.address)
@@ -39,9 +40,11 @@ export function handleRewardPaid(event: RewardPaidEvent): void {
 export function handleStaked(event: StakedEvent): void {
   const farm = getFarm(event.address)
 
+
   let entity = new Staked(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
+
   entity.user = event.params.user
   entity.amount = event.params.amount
   entity.farm = farm.id;
@@ -51,6 +54,12 @@ export function handleStaked(event: StakedEvent): void {
 
   entity.save()
 
+  // Update depositor
+  const depositor = getDepositor(farm.id, event.params.user)
+  depositor.amount = depositor.amount.plus(event.params.amount)
+  depositor.save()
+
+  // Update farm
   farm.totalStaked = farm.totalStaked.plus(event.params.amount);
   farm.save();
 }
@@ -61,6 +70,7 @@ export function handleWithdrawn(event: WithdrawnEvent): void {
   let entity = new Withdrawn(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
+
   entity.user = event.params.user
   entity.amount = event.params.amount
   entity.farm = farm.id;
@@ -70,6 +80,13 @@ export function handleWithdrawn(event: WithdrawnEvent): void {
 
   entity.save()
 
+
+  // Update depositor
+  const depositor = getDepositor(farm.id, event.params.user)
+  depositor.amount = depositor.amount.minus(event.params.amount)
+  depositor.save()
+
+  // Update farm
   farm.totalStaked = farm.totalStaked.minus(event.params.amount);
   farm.save();
 }

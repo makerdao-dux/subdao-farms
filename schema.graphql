@@ -2,9 +2,17 @@ type Farm @entity {
   id: Bytes! # address
   totalStaked: BigInt! # uint256
   totalRewardsPaid: BigInt! # uint256
+  depositors: [Depositor!]! @derivedFrom(field: "farm")
   deposits: [Staked!]! @derivedFrom(field: "farm")
   withdrawals: [Withdrawn!]! @derivedFrom(field: "farm")
   rewards: [RewardPaid!]! @derivedFrom(field: "farm")
+}
+
+type Depositor @entity {
+  id: String! # address (farmid-useraddress)
+  user: Bytes! # address of depositor
+  farm: Farm! # address of the staked farm
+  amount: BigInt! # uint256
 }
 
 type RewardPaid @entity(immutable: true) {
