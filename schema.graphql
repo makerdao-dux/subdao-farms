@@ -1,32 +1,17 @@
-type Recovered @entity(immutable: true) {
-  id: Bytes!
-  token: Bytes! # address
-  amount: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type RewardAdded @entity(immutable: true) {
-  id: Bytes!
-  reward: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Farm @entity {
+  id: Bytes! # address
+  totalStaked: BigInt! # uint256
+  totalRewardsPaid: BigInt! # uint256
+  deposits: [Staked!]! @derivedFrom(field: "farm")
+  withdrawals: [Withdrawn!]! @derivedFrom(field: "farm")
+  rewards: [RewardPaid!]! @derivedFrom(field: "farm")
 }
 
 type RewardPaid @entity(immutable: true) {
   id: Bytes!
-  user: Bytes! # address
+  farm: Farm! # address of the farm
+  user: Bytes! # address of the reward recipient
   reward: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type RewardsDurationUpdated @entity(immutable: true) {
-  id: Bytes!
-  newDuration: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -34,7 +19,8 @@ type RewardsDurationUpdated @entity(immutable: true) {
 
 type Staked @entity(immutable: true) {
   id: Bytes!
-  user: Bytes! # address
+  farm: Farm! # address of the staked farm
+  user: Bytes! # address of depositor
   amount: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -43,7 +29,8 @@ type Staked @entity(immutable: true) {
 
 type Withdrawn @entity(immutable: true) {
   id: Bytes!
-  user: Bytes! # address
+  farm: Farm! # address of the staked farm
+  user: Bytes! # address of depositor
   amount: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!

@@ -1,9 +1,10 @@
 import {
+
   RewardPaid as RewardPaidEvent,
   Staked as StakedEvent,
-  Withdrawn as WithdrawnEvent
+  Withdrawn as WithdrawnEvent,
+} from "../generated/StakingRewardsSDAO/StakingRewardsSDAO"
 
-} from "../generated/StakingRewardsDAI/StakingRewardsDAI"
 import {
   RewardPaid,
   Staked,
