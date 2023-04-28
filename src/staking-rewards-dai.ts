@@ -1,3 +1,4 @@
+import { log } from "matchstick-as"
 import {
   RewardPaid as RewardPaidEvent,
   Staked as StakedEvent,
@@ -15,6 +16,12 @@ import { getFarm } from "./getFarm"
 export function handleRewardPaid(event: RewardPaidEvent): void {
   const farm = getFarm(event.address)
 
+
+  // log user and reward
+  log.debug("handleRewardPaid user: {}", [event.params.user.toHexString()])
+  log.debug("handleRewardPaid reward: {}", [event.params.reward.toString()])
+  // log hash
+  log.debug("handleRewardPaid hash : {}", [event.transaction.hash.toHexString()])
   let entity = new RewardPaid(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
@@ -28,12 +35,12 @@ export function handleRewardPaid(event: RewardPaidEvent): void {
   entity.save()
 
   farm.totalRewardsPaid = farm.totalRewardsPaid.plus(event.params.reward);
-  farm.rewards.push(entity.id);
   farm.save();
 }
 
 export function handleStaked(event: StakedEvent): void {
   const farm = getFarm(event.address)
+
 
   let entity = new Staked(
     event.transaction.hash.concatI32(event.logIndex.toI32())
@@ -48,7 +55,6 @@ export function handleStaked(event: StakedEvent): void {
   entity.save()
 
   farm.totalStaked = farm.totalStaked.plus(event.params.amount);
-  farm.deposits.push(entity.id);
   farm.save();
 }
 
@@ -68,6 +74,5 @@ export function handleWithdrawn(event: WithdrawnEvent): void {
   entity.save()
 
   farm.totalStaked = farm.totalStaked.minus(event.params.amount);
-  farm.withdrawals.push(entity.id);
   farm.save();
 }
