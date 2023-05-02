@@ -3,9 +3,10 @@ type Farm @entity {
   totalStaked: BigInt! # uint256
   totalRewardsPaid: BigInt! # uint256
   depositors: [Depositor!]! @derivedFrom(field: "farm")
-  deposits: [Staked!]! @derivedFrom(field: "farm")
+  deposits: [Deposit!]! @derivedFrom(field: "farm")
   withdrawals: [Withdrawn!]! @derivedFrom(field: "farm")
   rewards: [RewardPaid!]! @derivedFrom(field: "farm")
+  tvl: [TVL!]! @derivedFrom(field: "farm")
 }
 
 type Depositor @entity {
@@ -19,13 +20,13 @@ type RewardPaid @entity(immutable: true) {
   id: Bytes!
   farm: Farm! # address of the farm
   user: Bytes! # address of the reward recipient
-  reward: BigInt! # uint256
+  amount: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
 
-type Staked @entity(immutable: true) {
+type Deposit @entity(immutable: true) {
   id: Bytes!
   farm: Farm! # address of the staked farm
   user: Bytes! # address of depositor
@@ -39,6 +40,16 @@ type Withdrawn @entity(immutable: true) {
   id: Bytes!
   farm: Farm! # address of the staked farm
   user: Bytes! # address of depositor
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+
+type TVL @entity(immutable: true) {
+  id: Bytes!
+  farm: Farm! # address of the staked farm
   amount: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
